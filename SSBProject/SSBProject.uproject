@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{959A285F-42F8-A956-863F-A19617386248}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "SSBProject",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
