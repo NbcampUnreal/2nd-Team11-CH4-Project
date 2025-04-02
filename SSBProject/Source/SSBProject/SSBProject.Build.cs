@@ -1,14 +1,23 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System.IO;
 
 public class SSBProject : ModuleRules
 {
 	public SSBProject(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+
+		PublicIncludePaths.AddRange(new string[] {
+			Path.Combine(ModuleDirectory, "GameModes"),
+			Path.Combine(ModuleDirectory, "GameStates"),
+			Path.Combine(ModuleDirectory, "PlayerControllers"),
+			Path.Combine(ModuleDirectory, "PlayerStates"),
+			Path.Combine(ModuleDirectory, "UserWidgets"),
+		});
+
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
