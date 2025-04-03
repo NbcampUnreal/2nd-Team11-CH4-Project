@@ -15,6 +15,7 @@ public class SSBProject : ModuleRules
 			Path.Combine(ModuleDirectory, "PlayerControllers"),
 			Path.Combine(ModuleDirectory, "PlayerStates"),
 			Path.Combine(ModuleDirectory, "UserWidgets"),
+			Path.Combine(ModuleDirectory, "Global"),
 		});
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG" });
