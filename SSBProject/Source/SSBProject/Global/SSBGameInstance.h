@@ -14,7 +14,8 @@ class SSBPROJECT_API USSBGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
-	
-	
+public:
+    UFUNCTION(BlueprintCallable, Server, Reliable)
+    void ServerMapTravel(const FString& MapName);
 	
 };
