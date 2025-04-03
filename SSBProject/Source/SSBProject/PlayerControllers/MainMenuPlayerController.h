@@ -14,7 +14,15 @@ class SSBPROJECT_API AMainMenuPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:
+	AMainMenuPlayerController();
+
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	TObjectPtr<UUserWidget> MainMenuWidgetInstance;
+
 };

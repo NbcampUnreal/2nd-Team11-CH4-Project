@@ -2,7 +2,26 @@
 
 
 #include "MainMenuPlayerController.h"
+#include "Blueprint/UserWidget.h"
 
+AMainMenuPlayerController::AMainMenuPlayerController()
+{
+	MainMenuWidgetClass = nullptr;
+	MainMenuWidgetInstance = nullptr;
+}
 
+void AMainMenuPlayerController::BeginPlay()
+{
+	if (MainMenuWidgetClass)
+	{
+		MainMenuWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
 
+		if (MainMenuWidgetInstance)
+		{
+			MainMenuWidgetInstance->AddToViewport();
 
+			SetShowMouseCursor(true);
+			SetInputMode(FInputModeUIOnly());
+		}
+	}
+}
