@@ -24,4 +24,18 @@ protected:
 private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ExitButton;
+
+protected:
+
+    UPROPERTY(meta = (BindWidget))
+    class UButton* SingleButton;
+
+    UPROPERTY(meta = (BindWidget))
+    class UButton* MultiplayerButton;
+
+    UPROPERTY(meta = (BindWidget))
+    class UButton* CoopButton;
+
+    UFUNCTION()
+    void OpenCharacterSelect();
 };
