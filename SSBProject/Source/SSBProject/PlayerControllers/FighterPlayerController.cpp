@@ -2,6 +2,9 @@
 
 
 #include "FighterPlayerController.h"
+#include "SSBGameInstance.h"
+#include "FighterGamemode.h"
+#include "FighterCharacter.h"
 #include "EnhancedInputSubsystems.h"
 
 AFighterPlayerController::AFighterPlayerController()
@@ -15,6 +18,25 @@ void AFighterPlayerController::BeginPlay()
     Super::BeginPlay();
 
     AddMapping();
+
+    if (IsLocalController())
+    {
+        if (const USSBGameInstance* SSBGI = GetGameInstance<USSBGameInstance>())
+        {
+            if (SSBGI->GetSelectedCharacterClass())
+            {
+                Server_SetSelectedCharacter(SSBGI->GetSelectedCharacterClass());
+            }
+        }
+    }
+}
+
+void AFighterPlayerController::Server_SetSelectedCharacter_Implementation(TSubclassOf<APawn> InClass)
+{
+    if (AFighterGamemode* FighterGamemode = GetWorld()->GetAuthGameMode<AFighterGamemode>())
+    {
+        FighterGamemode->HandlePlayerCharacterClass(this, InClass);
+    }
 }
 
 void AFighterPlayerController::AddMapping()
