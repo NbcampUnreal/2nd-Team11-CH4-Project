@@ -10,6 +10,9 @@ void USSBGameInstance::Init()
     SelectedCharacterClass = nullptr;
     TotalPlayerCount = 0;
 
+    //TEST
+    TotalPlayerCount = 2;
+    SelectedCharacterClass = TESTSelectedCharacterClass;
 }
 
 void USSBGameInstance::ServerMapTravel_Implementation(const FString& MapName)

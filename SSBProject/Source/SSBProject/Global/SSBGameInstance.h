@@ -31,6 +31,9 @@ public:
     UFUNCTION(BlueprintCallable)
     void SetTotalPlayerCount(int32 NewTotalPlayerCount);
 
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<APawn> TESTSelectedCharacterClass;
+
 protected:
     // 선택한 캐릭터
 	UPROPERTY(BlueprintReadOnly, Category = "Character")
