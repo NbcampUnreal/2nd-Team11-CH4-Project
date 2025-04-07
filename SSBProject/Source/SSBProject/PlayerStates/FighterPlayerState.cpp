@@ -6,7 +6,11 @@
 
 AFighterPlayerState::AFighterPlayerState()
 {
-	PlayerIndex = 1;
+	// 플레이어
+	PlayerIndex = 0;
+
+	// 캐릭터
+	States = EPlayerStates::Idle;
 }
 
 void AFighterPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

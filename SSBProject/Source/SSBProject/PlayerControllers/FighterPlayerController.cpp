@@ -54,4 +54,8 @@ void AFighterPlayerController::AddMapping()
             }
         }
     }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Input mapping skipped: GetLocalPlayer() is null"));
+    }
 }
