@@ -37,28 +37,15 @@ void AFighterGamemode::PostLogin(APlayerController* NewPlayer)
         return;
     }
 
-    bool bIsLocal = NewPlayer->IsLocalController();
-    bool bContain = AlivePlayerController.Contains(NewPlayer);
-    bool bAuthority = NewPlayer->HasAuthority();
+    AFighterGameState* FighterGameState = GetGameState<AFighterGameState>();
+    AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(NewPlayer->PlayerState);
 
-    if (false == bContain)
+    // 레벨 이동이 된 플레이어의 수를 카운트
+    // 입장 순서대로 현재 플레이어 스테이트에 번호를 부여
+    if (FighterGameState && FighterPlayerState)
     {
-        if (GetNetMode() == ENetMode::NM_ListenServer)
-        //if (false == bIsLocal)
-        {
-            AlivePlayerController.Add(NewPlayer);
-
-            AFighterGameState* FighterGameState = GetGameState<AFighterGameState>();
-            AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(NewPlayer->PlayerState);
-
-            // 레벨 이동이 된 플레이어의 수를 카운트
-            // 입장 순서대로 현재 플레이어 스테이트에 번호를 부여
-            if (FighterGameState && FighterPlayerState)
-            {
-                FighterPlayerState->SetPlayerIndex(FighterGameState->GetPlayerJoinCount());
-                FighterGameState->SetPlayerJoinCount(FighterGameState->GetPlayerJoinCount() + 1);
-            }
-        }
+        FighterPlayerState->SetPlayerIndex(FighterGameState->GetPlayerJoinCount());
+        FighterGameState->SetPlayerJoinCount(FighterGameState->GetPlayerJoinCount() + 1);
     }
 }
 
@@ -67,8 +54,6 @@ void AFighterGamemode::HandlePlayerCharacterClass(APlayerController* Player, TSu
     CharacterClassMap.FindOrAdd(Player) = CharacterClass;
 
     AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(Player->PlayerState);
-
-    if (Player->IsLocalController()) return;
 
     // 바로 스폰 시도 가능 (이미 로그인된 경우)
     if (CharacterClass && Player && !Player->GetPawn() && FighterPlayerState)

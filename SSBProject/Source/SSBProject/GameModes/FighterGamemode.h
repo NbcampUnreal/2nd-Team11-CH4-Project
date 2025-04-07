@@ -28,6 +28,4 @@ public:
 
 private:
 	TMap<APlayerController*, TSubclassOf<APawn>> CharacterClassMap;
-
-	TArray<TObjectPtr<APlayerController>> AlivePlayerController;
 };
