@@ -1,5 +1,7 @@
 #include "TitleWidgetController.h"
 #include "Blueprint/UserWidget.h"
+#include "Camera/CameraActor.h"
+#include "Kismet/GameplayStatics.h"
 
 void ATitleWidgetController::BeginPlay()
 {
@@ -23,3 +25,17 @@ void ATitleWidgetController::BeginPlay()
 	}
 }
 
+void ATitleWidgetController::SetTitleCameraView()
+{
+	TArray<AActor*> FoundCameras;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundCameras);
+
+	for (AActor* Actor : FoundCameras)
+	{
+		if (Actor->GetName().Contains(TEXT("TitleCamera"))) // 카메라 이름 기준
+		{
+			SetViewTargetWithBlend(Actor, 1.0f);
+			break;
+		}
+	}
+}

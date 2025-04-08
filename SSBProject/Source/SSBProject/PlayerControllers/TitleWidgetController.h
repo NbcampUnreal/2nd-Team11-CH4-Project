@@ -18,4 +18,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = APlayerController, Meta = (AllowPrivateAccess))
 	TObjectPtr<UUserWidget> UIWidgetInstance;
+
+	void SetTitleCameraView();
 };
