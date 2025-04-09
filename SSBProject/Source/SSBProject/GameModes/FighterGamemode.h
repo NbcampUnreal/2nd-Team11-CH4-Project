@@ -27,5 +27,8 @@ public:
 	void HandlePlayerCharacterClass(APlayerController* Player, TSubclassOf<APawn> CharacterClass);
 
 private:
+	void SpawnPlayerCharacters();
+
+private:
 	TMap<APlayerController*, TSubclassOf<APawn>> CharacterClassMap;
 };
