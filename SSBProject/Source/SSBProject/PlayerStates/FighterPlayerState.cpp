@@ -11,6 +11,7 @@ AFighterPlayerState::AFighterPlayerState()
 
 	// Ä³¸¯ÅÍ
 	States = EPlayerStates::Idle;
+	Stock = 0;
 }
 
 void AFighterPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -18,6 +19,10 @@ void AFighterPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AFighterPlayerState, PlayerIndex);
+	DOREPLIFETIME(AFighterPlayerState, States);
+	DOREPLIFETIME(AFighterPlayerState, Stock);
+	DOREPLIFETIME(AFighterPlayerState, SuperNum);
+	DOREPLIFETIME(AFighterPlayerState, HPPercent);
 
 }
 
@@ -29,4 +34,34 @@ int32 AFighterPlayerState::GetPlayerIndex()
 void AFighterPlayerState::SetPlayerIndex(int32 NewPlayerIndex)
 {
 	PlayerIndex = NewPlayerIndex;
+}
+
+int32 AFighterPlayerState::GetStock()
+{
+	return Stock;
+}
+
+void AFighterPlayerState::SetStock(int32 NewStock)
+{
+	Stock = NewStock;
+}
+
+int32 AFighterPlayerState::GetSuperNum()
+{
+	return SuperNum;
+}
+
+void AFighterPlayerState::SetSuperNum(int32 NewSuper)
+{
+	SuperNum = NewSuper;
+}
+
+int32 AFighterPlayerState::GetHPPercent()
+{
+	return HPPercent;
+}
+
+void AFighterPlayerState::SetHPPercent(int32 NewHPPercent)
+{
+	HPPercent = NewHPPercent;
 }

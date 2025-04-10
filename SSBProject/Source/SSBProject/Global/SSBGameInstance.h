@@ -31,6 +31,11 @@ public:
     UFUNCTION(BlueprintCallable)
     void SetTotalPlayerCount(int32 NewTotalPlayerCount);
 
+    UFUNCTION(BlueprintCallable, BlueprintPure)
+    int32 GetInitialStock();
+    UFUNCTION(BlueprintCallable)
+    void SetInitialStock(int32 NewInitialStock);
+
     UPROPERTY(EditAnywhere)
     TSubclassOf<APawn> TESTSelectedCharacterClass;
 
@@ -42,4 +47,8 @@ protected:
     // 총 플레이어 수
     UPROPERTY(BlueprintReadOnly, Category = "Player")
     int32 TotalPlayerCount;
+
+    // Stock 모드에서 사용할 Stock 수
+    UPROPERTY(BlueprintReadOnly, Category = "Stock")
+    int32 InitialStock;
 };
