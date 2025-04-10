@@ -9,10 +9,12 @@ void USSBGameInstance::Init()
 
     SelectedCharacterClass = nullptr;
     TotalPlayerCount = 0;
+    InitialStock = 0;
 
     //TEST
     TotalPlayerCount = 2;
     SelectedCharacterClass = TESTSelectedCharacterClass;
+    InitialStock = 3;
 }
 
 void USSBGameInstance::ServerMapTravel_Implementation(const FString& MapName)
@@ -42,4 +44,14 @@ int32 USSBGameInstance::GetTotalPlayerCount()
 void USSBGameInstance::SetTotalPlayerCount(int32 NewTotalPlayerCount)
 {
     TotalPlayerCount = NewTotalPlayerCount;
+}
+
+int32 USSBGameInstance::GetInitialStock()
+{
+    return InitialStock;
+}
+
+void USSBGameInstance::SetInitialStock(int32 NewInitialStock)
+{
+    InitialStock = NewInitialStock;
 }

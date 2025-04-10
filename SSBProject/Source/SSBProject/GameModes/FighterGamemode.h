@@ -20,9 +20,14 @@ public:
 	virtual void InitGameState() override;
 
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 public:
+	UFUNCTION()
+	void AllPlayerLoginToGameStart();
+
 	UFUNCTION()
 	void HandlePlayerCharacterClass(APlayerController* Player, TSubclassOf<APawn> CharacterClass);
 
@@ -30,5 +35,8 @@ private:
 	void SpawnPlayerCharacters();
 
 private:
+	// 유저 접속을 확인하는 타이머
+	FTimerHandle PlayerLoginTimerHandle;
+
 	TMap<APlayerController*, TSubclassOf<APawn>> CharacterClassMap;
 };

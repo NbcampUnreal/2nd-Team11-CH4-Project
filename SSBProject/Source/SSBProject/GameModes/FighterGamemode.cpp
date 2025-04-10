@@ -28,6 +28,13 @@ void AFighterGamemode::InitGameState()
     }
 }
 
+void AFighterGamemode::BeginPlay()
+{
+    Super::BeginPlay();
+
+    GetWorldTimerManager().SetTimer(PlayerLoginTimerHandle, this, &AFighterGamemode::AllPlayerLoginToGameStart, 1.f, false);
+}
+
 void AFighterGamemode::PostLogin(APlayerController* NewPlayer)
 {
     Super::PostLogin(NewPlayer);
@@ -49,19 +56,42 @@ void AFighterGamemode::PostLogin(APlayerController* NewPlayer)
     }
 }
 
-void AFighterGamemode::HandlePlayerCharacterClass(APlayerController* Player, TSubclassOf<APawn> CharacterClass)
+void AFighterGamemode::AllPlayerLoginToGameStart()
 {
-    CharacterClassMap.FindOrAdd(Player) = CharacterClass;
-
     AFighterGameState* FighterGameState = GetGameState<AFighterGameState>();
 
     int32 TotalPlayerCount = FighterGameState->GetTotalPlayerCount();
     int32 PlayerJoinCount = FighterGameState->GetPlayerJoinCount();
 
+    // 모든 플레이어가 게임에 접속 된 경우
     if (TotalPlayerCount == PlayerJoinCount)
     {
+        // 각 플레이어 스테이트에 플레이어 캐릭터의 목숨 설정
+        for (TObjectPtr<APlayerState> PlayerState : FighterGameState->PlayerArray)
+        {
+            TObjectPtr<AFighterPlayerState> FighterPlayerState = Cast<AFighterPlayerState>(PlayerState);
+            USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+            if (FighterPlayerState && SSBGameInstance)
+            {
+                FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
+            }
+        }
+
+        // 캐릭터 스폰
         SpawnPlayerCharacters();
     }
+    else
+    {
+        // 모든 플레이어가 게임에 접속하지 않았으므로, 대기
+        GetWorldTimerManager().ClearTimer(PlayerLoginTimerHandle);
+        GetWorldTimerManager().SetTimer(PlayerLoginTimerHandle, this, &AFighterGamemode::AllPlayerLoginToGameStart, 1.f, false);
+    }
+}
+
+void AFighterGamemode::HandlePlayerCharacterClass(APlayerController* Player, TSubclassOf<APawn> CharacterClass)
+{
+    CharacterClassMap.FindOrAdd(Player) = CharacterClass;
+
 }
 
 void AFighterGamemode::SpawnPlayerCharacters()
