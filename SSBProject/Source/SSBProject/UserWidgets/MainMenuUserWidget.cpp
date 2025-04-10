@@ -1,51 +1,73 @@
 #include "MainMenuUserWidget.h"
+#include "ModeCardUserWidget.h"
 #include "Components/Button.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "Components/HorizontalBox.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 UMainMenuUserWidget::UMainMenuUserWidget(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+    : Super(ObjectInitializer)
 {
 }
-
 
 void UMainMenuUserWidget::NativeConstruct()
 {
-	Super::NativeConstruct(); // 부모 클래스의 NativeConstruct 호출
+    Super::NativeConstruct();
 
-	if (ExitButton) // ExitButton이 nullptr인지 확인
-	{
-		ExitButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OnExitButtonClicked);
-	}
-    if (SingleButton)
+    if (ExitButton)
     {
-        SingleButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OpenCharacterSelect);
+        ExitButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OnExitButtonClicked);
     }
-    if (MultiplayerButton)
+
+    CreateModeCard(FText::FromString(TEXT("SINGLE")), FText::FromString(TEXT("1인 플레이")), SingleIcon, EGameModes::Scenario);
+    //CreateModeCard(FText::FromString(TEXT("CO-OP")), FText::FromString(TEXT("2인 협력")), CoopIcon, EGameModes::PVE);
+    CreateModeCard(FText::FromString(TEXT("VERSUS")), FText::FromString(TEXT("1vs1 또는 2vs2")), VersusIcon, EGameModes::PVP);
+    CreateModeCard(FText::FromString(TEXT("OPTIONS")), FText::FromString(TEXT("설정 메뉴")), OptionsIcon, EGameModes::None);
+
+
+
+}
+
+void UMainMenuUserWidget::CreateModeCard(FText Title, FText Desc, UTexture2D* Icon, EGameModes ModeType)
+{
+    if (CardWidgetClass && CardBox)
     {
-        MultiplayerButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OpenCharacterSelect);
-    }
-    if (CoopButton)
-    {
-        CoopButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OpenCharacterSelect);
+        UModeCardUserWidget* Card = CreateWidget<UModeCardUserWidget>(GetWorld(), CardWidgetClass);
+        if (Card)
+        {
+            Card->SetCardData(Icon, Title, Desc, ModeType);
+            Card->OnCardClicked.AddDynamic(this, &UMainMenuUserWidget::HandleCardClick);
+            CardBox->AddChild(Card);
+        }
     }
 }
 
-void UMainMenuUserWidget::OnExitButtonClicked()
+void UMainMenuUserWidget::HandleCardClick(EGameModes ModeType)
 {
-	UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
+    if (ModeType != EGameModes::None)
+    {
+        OpenCharacterSelect();
+    }
 }
 
 void UMainMenuUserWidget::OpenCharacterSelect()
 {
     if (UWorld* World = GetWorld())
     {
-        UUserWidget* CharacterUserWidget = CreateWidget<UUserWidget>(World, LoadClass<UUserWidget>(nullptr, TEXT("/Game/Blueprints/UserWidgets/BP_CharacterUserWidget.BP_CharacterUserWidget_C")));
+        UUserWidget* CharacterUI = CreateWidget<UUserWidget>(
+            World,
+            LoadClass<UUserWidget>(nullptr, TEXT("/Game/Blueprints/UserWidgets/BP_CharacterUserWidget.BP_CharacterUserWidget_C"))
+        );
 
-        if (CharacterUserWidget)
+        if (CharacterUI)
         {
-            CharacterUserWidget->AddToViewport();
+            CharacterUI->AddToViewport();
             RemoveFromParent();
         }
     }
+}
+
+void UMainMenuUserWidget::OnExitButtonClicked()
+{
+    UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
 }
