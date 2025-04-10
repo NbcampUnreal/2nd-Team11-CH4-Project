@@ -25,6 +25,8 @@ protected:
     float ExplosionRadius;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mine")
     int ExplosionDamage;
+    UFUNCTION(BlueprintImplementableEvent, Category = "Mine")
+    void OnMineTriggered(AActor* OverlappedActor);
 
     FTimerHandle ExplosionTimerHandle;
 
