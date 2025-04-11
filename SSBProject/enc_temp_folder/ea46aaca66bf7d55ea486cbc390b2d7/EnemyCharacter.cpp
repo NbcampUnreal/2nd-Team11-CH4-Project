@@ -26,26 +26,30 @@ void AEnemyCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    APawn* Target = Cast<APawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+    //FVector Velocity = GetVelocity();
+
+    //if (FMath::Abs(Velocity.Y) > 5.f) // 거의 정지 상태가 아닐 때
+    //{
+    //    float DesiredYaw = Velocity.Y > 0 ? 0.f : 180.f;
+
+    //    FRotator NewRotation = GetActorRotation();
+    //    NewRotation.Yaw = DesiredYaw;
+
+    //    SetActorRotation(NewRotation); // 캐릭터 전체 회전
+    //}
+
+    APawn* Target = Cast<APawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)); // 또는 다른 방식으로 타겟 획득
     if (!Target) return;
 
     FVector ToTarget = Target->GetActorLocation() - GetActorLocation();
-    ToTarget.Z = 0.f;
+    ToTarget.Z = 0.f; // 수직 방향 제거
 
-    if (ToTarget.SizeSquared() > 25.f)
+    if (ToTarget.SizeSquared() > 25.f) // 너무 가까우면 회전하지 않음
     {
         FRotator TargetRotation = ToTarget.Rotation();
-        float AngleDiff = FMath::Abs(FMath::FindDeltaAngleDegrees(GetActorRotation().Yaw, TargetRotation.Yaw));
-
-        // 부드럽게 회전
-        FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, 10.f);
-        SetActorRotation(NewRotation);
-
-        // 회전이 덜 끝났으면 이동 금지 신호
-        bRotationFinished = (AngleDiff < 10.f);
+        SetActorRotation(TargetRotation);
     }
 }
-
 
 FGenericTeamId AEnemyCharacter::GetGenericTeamId() const
 {

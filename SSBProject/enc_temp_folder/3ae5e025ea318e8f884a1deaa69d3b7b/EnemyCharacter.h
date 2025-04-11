@@ -32,9 +32,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team", meta = (ClampMin = "0", ClampMax = "255"))
 	uint8 TeamID = 1;
 
-	UPROPERTY(BlueprintReadOnly)
-	bool bRotationFinished = true;
-
 	UFUNCTION(BlueprintCallable)
 	void PlayHitReaction(const FVector& FromLocation);
 

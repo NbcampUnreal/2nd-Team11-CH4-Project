@@ -31,12 +31,12 @@ void AEnemyAIController::Tick(float DeltaTime)
     FVector PlayerLocation = TargetPlayer->GetActorLocation();
     FVector MyLocation = ControlledPawn->GetActorLocation();
 
-    DistanceX = PlayerLocation.Y - MyLocation.Y;
+    DistanceX = MyLocation.Y - PlayerLocation.Y;
     MoveDir = FMath::Sign(DistanceX);
 
     FVector ForwardVector = ControlledPawn->GetActorForwardVector();
-   // FVector InputDirection = ForwardVector * MoveDir;
-    FVector InputDirection = FVector(MoveDir, 0.f, 0.f);
+    FVector InputDirection = ForwardVector * MoveDir;
+    //FVector InputDirection = FVector(MoveDir, 0.f, 0.f);
 
     AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(ControlledPawn);
     if (Enemy && Enemy->CombatComponent)
