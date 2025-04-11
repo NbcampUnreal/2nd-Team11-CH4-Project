@@ -18,9 +18,11 @@ public class SSBProject : ModuleRules
 			Path.Combine(ModuleDirectory, "Global"),
 			Path.Combine(ModuleDirectory, "Chracters"),
             Path.Combine(ModuleDirectory, "Actors"),
+            Path.Combine(ModuleDirectory, "Instances"),
+            Path.Combine(ModuleDirectory, "Combats"),
         });
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "AIModule", "GameplayAbilities", "GameplayTasks", "GameplayTags" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
