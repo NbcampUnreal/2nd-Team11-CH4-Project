@@ -14,6 +14,18 @@ void UMainMenuUserWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
+    if (SingleCardButton)
+    {
+        SingleCardButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OnSingleCardClicked);
+    }
+    {
+    if (MultiplayerCardButton)
+        MultiplayerCardButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OnMultiplayerCardClicked);
+    }
+    {
+    if (CoopCardButton)
+        CoopCardButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OnCoopCardClicked);
+    }
     if (ExitButton)
     {
         ExitButton->OnClicked.AddDynamic(this, &UMainMenuUserWidget::OnExitButtonClicked);
@@ -23,8 +35,6 @@ void UMainMenuUserWidget::NativeConstruct()
     //CreateModeCard(FText::FromString(TEXT("CO-OP")), FText::FromString(TEXT("2인 협력")), CoopIcon, EGameModes::PVE);
     CreateModeCard(FText::FromString(TEXT("VERSUS")), FText::FromString(TEXT("1vs1 또는 2vs2")), VersusIcon, EGameModes::PVP);
     CreateModeCard(FText::FromString(TEXT("OPTIONS")), FText::FromString(TEXT("설정 메뉴")), OptionsIcon, EGameModes::None);
-
-
 
 }
 
@@ -70,4 +80,18 @@ void UMainMenuUserWidget::OpenCharacterSelect()
 void UMainMenuUserWidget::OnExitButtonClicked()
 {
     UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, false);
+}
+void UMainMenuUserWidget::OnSingleCardClicked()
+{
+    OpenCharacterSelect();
+}
+
+void UMainMenuUserWidget::OnMultiplayerCardClicked()
+{
+    OpenCharacterSelect();
+}
+
+void UMainMenuUserWidget::OnCoopCardClicked()
+{
+    OpenCharacterSelect();
 }

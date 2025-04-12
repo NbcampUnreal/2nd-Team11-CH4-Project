@@ -21,8 +21,31 @@ public:
 protected:
     virtual void NativeConstruct() override;
 
-    void CreateModeCard(FText Title, FText Desc, UTexture2D* Icon, EGameModes ModeType);
+    // 버튼 바인딩
+    UPROPERTY(meta = (BindWidget))
+    UButton* SingleCardButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* MultiplayerCardButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* CoopCardButton;
+
+    // 클릭 함수들
+    UFUNCTION()
+    void OnSingleCardClicked();
+
+    UFUNCTION()
+    void OnMultiplayerCardClicked();
+
+    UFUNCTION()
+    void OnCoopCardClicked();
+
+    // 화면 전환용
     void OpenCharacterSelect();
+
+    void CreateModeCard(FText Title, FText Desc, UTexture2D* Icon, EGameModes ModeType);
+
 
     UFUNCTION()
     void HandleCardClick(EGameModes ModeType);
