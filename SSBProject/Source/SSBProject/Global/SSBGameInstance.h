@@ -22,9 +22,9 @@ public:
 	
 public:
     UFUNCTION(BlueprintCallable)
-    TSubclassOf<APawn> GetSelectedCharacterClass() const;
+    TSubclassOf<APawn> GetSelectedCharacterClassMap(FString KeyClientName) const;
     UFUNCTION(BlueprintCallable)
-    void SetSelectedCharacterClass(TSubclassOf<APawn> NewClass);
+    void SetSelectedCharacterClassMap(FString KeyClientName, TSubclassOf<APawn> NewClass);
 
     UFUNCTION(BlueprintCallable)
     int32 GetTotalPlayerCount();
@@ -40,6 +40,10 @@ public:
     TSubclassOf<APawn> TESTSelectedCharacterClass;
 
 protected:
+    // 선택된 캐릭터 목록
+    UPROPERTY(BlueprintReadOnly, Category = "Character")
+    TMap<FString, TSubclassOf<APawn>> SelectedCharacterClassMap;
+
     // 선택한 캐릭터
 	UPROPERTY(BlueprintReadOnly, Category = "Character")
 	TSubclassOf<APawn> SelectedCharacterClass;

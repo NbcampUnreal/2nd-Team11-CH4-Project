@@ -19,6 +19,19 @@ public:
 
 	virtual void BeginPlay() override;
 
+public:
+	UFUNCTION(Server, Reliable)
+	void SetSelectCharacter(TSubclassOf<APawn> SelectedClass);
+
+	//TEST
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void ServerMapTravel(const FString& MapName);
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<APawn> TESTSelectedCharacterClass1;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<APawn> TESTSelectedCharacterClass2;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;

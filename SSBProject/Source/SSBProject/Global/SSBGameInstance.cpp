@@ -7,13 +7,11 @@ void USSBGameInstance::Init()
 {
     Super::Init();
 
-    SelectedCharacterClass = nullptr;
     TotalPlayerCount = 0;
     InitialStock = 0;
 
     //TEST
-    TotalPlayerCount = 2;
-    SelectedCharacterClass = TESTSelectedCharacterClass;
+    TotalPlayerCount = 1;
     InitialStock = 3;
 }
 
@@ -21,19 +19,23 @@ void USSBGameInstance::ServerMapTravel_Implementation(const FString& MapName)
 {
     if (GetWorld() && GetWorld()->GetAuthGameMode())
     {
-        FString Command = FString::Printf(TEXT("servertravel %s"), *MapName);
+        FString Command = FString::Printf(TEXT("%s?listen"), *MapName);
         GetWorld()->ServerTravel(Command);
     }
 }
 
-TSubclassOf<APawn> USSBGameInstance::GetSelectedCharacterClass() const
+TSubclassOf<APawn> USSBGameInstance::GetSelectedCharacterClassMap(FString KeyClientName) const
 {
-    return SelectedCharacterClass;
+    const TSubclassOf<APawn>* Found = SelectedCharacterClassMap.Find(KeyClientName);
+    return Found ? *Found : nullptr;
 }
 
-void USSBGameInstance::SetSelectedCharacterClass(TSubclassOf<APawn> NewClass)
+void USSBGameInstance::SetSelectedCharacterClassMap(FString KeyClientName, TSubclassOf<APawn> NewClass)
 {
-    SelectedCharacterClass = NewClass;
+    if (NewClass)
+    {
+        SelectedCharacterClassMap.FindOrAdd(KeyClientName) = NewClass;
+    }
 }
 
 int32 USSBGameInstance::GetTotalPlayerCount()
