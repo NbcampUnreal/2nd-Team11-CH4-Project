@@ -19,6 +19,12 @@ public:
 
 	virtual void InitGameState() override;
 
+	virtual void StartPlay() override;
+
+	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+
+	virtual APawn* SpawnDefaultPawnFor_Implementation(AController* NewPlayer, AActor* StartSpot) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -28,15 +34,7 @@ public:
 	UFUNCTION()
 	void AllPlayerLoginToGameStart();
 
-	UFUNCTION()
-	void HandlePlayerCharacterClass(APlayerController* Player, TSubclassOf<APawn> CharacterClass);
-
-private:
-	void SpawnPlayerCharacters();
-
 private:
 	// 유저 접속을 확인하는 타이머
 	FTimerHandle PlayerLoginTimerHandle;
-
-	TMap<APlayerController*, TSubclassOf<APawn>> CharacterClassMap;
 };

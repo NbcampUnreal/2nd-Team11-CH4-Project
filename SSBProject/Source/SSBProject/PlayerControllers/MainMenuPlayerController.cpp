@@ -2,6 +2,8 @@
 
 
 #include "MainMenuPlayerController.h"
+#include "GameFramework/PlayerState.h"
+#include "SSBGameInstance.h"
 #include "Blueprint/UserWidget.h"
 
 AMainMenuPlayerController::AMainMenuPlayerController()
@@ -12,7 +14,12 @@ AMainMenuPlayerController::AMainMenuPlayerController()
 
 void AMainMenuPlayerController::BeginPlay()
 {
-	if (MainMenuWidgetClass)
+	Super::BeginPlay();
+
+	//TEST
+	GetWorldTimerManager().SetTimer(TESTTimerHandle, this, &AMainMenuPlayerController::TESTFUNC, 1.f, false);
+
+	if (IsLocalController() && MainMenuWidgetClass)
 	{
 		MainMenuWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
 
@@ -23,5 +30,28 @@ void AMainMenuPlayerController::BeginPlay()
 			SetShowMouseCursor(true);
 			SetInputMode(FInputModeUIOnly());
 		}
+	}
+}
+
+void AMainMenuPlayerController::TESTFUNC()
+{
+	if (TESTSelectedCharacterClass1)
+	{
+		SetSelectCharacter_Implementation(TESTSelectedCharacterClass1);
+		TESTSelectedCharacterClass1 = nullptr;
+	}
+	else
+	{
+		SetSelectCharacter_Implementation(TESTSelectedCharacterClass2);
+	}
+}
+
+void AMainMenuPlayerController::SetSelectCharacter_Implementation(TSubclassOf<APawn> SelectedClass)
+{
+	USSBGameInstance* CurInstnace = GetGameInstance<USSBGameInstance>();
+	if (CurInstnace && PlayerState)
+	{
+		FString CurPlayerName = PlayerState->GetPlayerName();
+		CurInstnace->SetSelectedCharacterClassMap(CurPlayerName, SelectedClass);
 	}
 }

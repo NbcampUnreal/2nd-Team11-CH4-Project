@@ -20,10 +20,6 @@ public:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(Server, Reliable)
-	void Server_SetSelectedCharacter(TSubclassOf<APawn> InClass);
-
-public:
 	void AddMapping();
 
 public:

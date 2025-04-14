@@ -3,6 +3,7 @@
 
 #include "FighterGamemode.h"
 #include "SSBGameInstance.h"
+#include "FighterPlayerController.h"
 #include "FighterPlayerState.h"
 #include "FighterGameState.h"
 #include "Kismet/GamePlayStatics.h"
@@ -23,9 +24,55 @@ void AFighterGamemode::InitGameState()
     {
         if (USSBGameInstance* SSBGI = GetGameInstance<USSBGameInstance>())
         {
+            FighterGameState->SetTotalCharacterCount(SSBGI->GetTotalCharacterCount());
             FighterGameState->SetTotalPlayerCount(SSBGI->GetTotalPlayerCount());
         }
     }
+}
+
+void AFighterGamemode::StartPlay()
+{
+    Super::StartPlay();
+}
+
+UClass* AFighterGamemode::GetDefaultPawnClassForController_Implementation(AController* InController)
+{
+    AFighterPlayerController* CurPlayerController = Cast<AFighterPlayerController>(InController);
+    AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(CurPlayerController->PlayerState);
+
+    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+    TSubclassOf<APawn> ChosenClass = SSBGameInstance->GetSelectedCharacterClassMap(FighterPlayerState->GetPlayerName());
+
+    return ChosenClass;
+}
+
+APawn* AFighterGamemode::SpawnDefaultPawnFor_Implementation(AController* NewPlayer, AActor* StartSpot)
+{
+    AFighterPlayerController* CurPlayerController = Cast<AFighterPlayerController>(NewPlayer);
+    AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(CurPlayerController->PlayerState);
+
+    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+    TSubclassOf<APawn> ChosenClass = SSBGameInstance->GetSelectedCharacterClassMap(FighterPlayerState->GetPlayerName());
+
+    // 플레이어가 스폰되어야할 위치를 가진 액터들
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnPointActor::StaticClass(), FoundActors);
+
+    // 플레이어가 스폰되어야할 위치를 위해 인덱스를 가져옴
+    int32 PlayerIndex = FighterPlayerState->GetPlayerIndex();
+
+    FTransform SpawnTransform = FTransform::Identity;
+
+    if (FoundActors.Num() > PlayerIndex)
+    {
+        SpawnTransform = FoundActors[PlayerIndex]->GetActorTransform();
+    }
+
+    APawn* SpawnedPawn = GetWorld()->SpawnActor<APawn>(ChosenClass, SpawnTransform);
+
+    NewPlayer->Possess(SpawnedPawn);
+
+    return SpawnedPawn;
 }
 
 void AFighterGamemode::BeginPlay()
@@ -54,6 +101,12 @@ void AFighterGamemode::PostLogin(APlayerController* NewPlayer)
         FighterPlayerState->SetPlayerIndex(FighterGameState->GetPlayerJoinCount());
         FighterGameState->SetPlayerJoinCount(FighterGameState->GetPlayerJoinCount() + 1);
     }
+    // 입장한 플레이어의 캐릭터 목숨 설정
+    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+    if (FighterPlayerState && SSBGameInstance)
+    {
+        FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
+    }
 }
 
 void AFighterGamemode::AllPlayerLoginToGameStart()
@@ -66,19 +119,24 @@ void AFighterGamemode::AllPlayerLoginToGameStart()
     // 모든 플레이어가 게임에 접속 된 경우
     if (TotalPlayerCount == PlayerJoinCount)
     {
-        // 각 플레이어 스테이트에 플레이어 캐릭터의 목숨 설정
-        for (TObjectPtr<APlayerState> PlayerState : FighterGameState->PlayerArray)
-        {
-            TObjectPtr<AFighterPlayerState> FighterPlayerState = Cast<AFighterPlayerState>(PlayerState);
-            USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
-            if (FighterPlayerState && SSBGameInstance)
-            {
-                FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
-            }
-        }
+        int32 TotalCharacterCount = FighterGameState->GetTotalCharacterCount();
 
-        // 캐릭터 스폰
-        SpawnPlayerCharacters();
+        for (int i = 0; i < TotalCharacterCount - PlayerJoinCount; ++i)
+        {
+            int32 CurPlayerJoinCount = FighterGameState->GetPlayerJoinCount();
+
+            APlayerController* NewPlayerController = UGameplayStatics::CreatePlayer(GetWorld(), CurPlayerJoinCount, true);
+
+            AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(NewPlayerController->PlayerState);
+            const FString& CurPlayerName = FighterPlayerState->GetPlayerName();
+            
+            USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+
+            SSBGameInstance->SetIsAIArray(CurPlayerJoinCount, true);
+            SSBGameInstance->SetSelectedCharacterClassMap(CurPlayerName, SSBGameInstance->GetAICharacterClassArray(i));
+
+            RestartPlayer(NewPlayerController);
+        }
     }
     else
     {
@@ -87,63 +145,3 @@ void AFighterGamemode::AllPlayerLoginToGameStart()
         GetWorldTimerManager().SetTimer(PlayerLoginTimerHandle, this, &AFighterGamemode::AllPlayerLoginToGameStart, 1.f, false);
     }
 }
-
-void AFighterGamemode::HandlePlayerCharacterClass(APlayerController* Player, TSubclassOf<APawn> CharacterClass)
-{
-    CharacterClassMap.FindOrAdd(Player) = CharacterClass;
-
-}
-
-void AFighterGamemode::SpawnPlayerCharacters()
-{
-    // Pawn들의 BeginPlay이벤트가 차례대로 호출되고 플레이어 컨트롤러들의 OnPossecc 이벤트가 따로 한번에 호출 될 수 있도록 분리
-    TMap<APlayerController*, TObjectPtr<APawn>> SpawnCharacter;
-
-    // 플레이어가 빙의 될 폰 스폰하기
-    for (auto e : CharacterClassMap)
-    {
-        APlayerController* Player = e.Key;
-        TSubclassOf<APawn> CharacterClass = e.Value;
-
-        AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(Player->PlayerState);
-
-        // 바로 스폰 시도 가능 (이미 로그인된 경우)
-        if (CharacterClass && Player && !Player->GetPawn() && FighterPlayerState)
-        {
-            // 플레이어가 스폰되어야할 위치를 가진 액터들
-            TArray<AActor*> FoundActors;
-            UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnPointActor::StaticClass(), FoundActors);
-
-            // 플레이어가 스폰되어야할 위치를 위해 인덱스를 가져옴
-            int32 PlayerIndex = FighterPlayerState->GetPlayerIndex();
-
-            FVector SpawnLocation = FVector(0.f, 0.f, 0.f);
-            FRotator SpawnRotation = FRotator::ZeroRotator;
-
-            if (FoundActors.Num() > PlayerIndex)
-            {
-                SpawnLocation = FoundActors[PlayerIndex]->GetActorLocation();
-                SpawnRotation = FoundActors[PlayerIndex]->GetActorRotation();
-            }
-
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Owner = Player;
-
-            APawn* NewPawn = GetWorld()->SpawnActor<APawn>(*CharacterClass, SpawnLocation, SpawnRotation, SpawnParams);
-            SpawnCharacter.Add(Player, NewPawn);
-        }
-    }
-
-    for (auto e : SpawnCharacter)
-    {
-        APlayerController* CurPlayerController = e.Key;
-        TObjectPtr<APawn> CurPawn = e.Value;
-
-        if (CurPlayerController && CurPawn)
-        {
-            CurPlayerController->Possess(CurPawn);
-        }
-    }
-}
-
-

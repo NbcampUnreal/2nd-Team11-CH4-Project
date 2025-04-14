@@ -17,26 +17,12 @@ void AFighterPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
+    // UI 전용 입력 모드 설정 (마우스 커서도 표시)
+    FInputModeGameOnly InputMode;
+    SetInputMode(InputMode);
+    bShowMouseCursor = false;
+
     AddMapping();
-
-    if (IsLocalController())
-    {
-        if (const USSBGameInstance* SSBGI = GetGameInstance<USSBGameInstance>())
-        {
-            if (SSBGI->GetSelectedCharacterClass())
-            {
-                Server_SetSelectedCharacter(SSBGI->GetSelectedCharacterClass());
-            }
-        }
-    }
-}
-
-void AFighterPlayerController::Server_SetSelectedCharacter_Implementation(TSubclassOf<APawn> InClass)
-{
-    if (AFighterGamemode* FighterGamemode = GetWorld()->GetAuthGameMode<AFighterGamemode>())
-    {
-        FighterGamemode->HandlePlayerCharacterClass(this, InClass);
-    }
 }
 
 void AFighterPlayerController::AddMapping()
