@@ -6,7 +6,7 @@
 
 AFighterGameState::AFighterGameState()
 {
-	TotalPlayerCount = 0;
+	TotalCharacterCount = 0;
 	PlayerJoinCount = 0;
 }
 
@@ -14,7 +14,19 @@ void AFighterGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(AFighterGameState, TotalCharacterCount);
 	DOREPLIFETIME(AFighterGameState, TotalPlayerCount);
+	DOREPLIFETIME(AFighterGameState, PlayerJoinCount);
+}
+
+int32 AFighterGameState::GetTotalCharacterCount()
+{
+	return TotalCharacterCount;
+}
+
+void AFighterGameState::SetTotalCharacterCount(int32 NewTotalCharacterCount)
+{
+	TotalCharacterCount = NewTotalCharacterCount;
 }
 
 int32 AFighterGameState::GetTotalPlayerCount()

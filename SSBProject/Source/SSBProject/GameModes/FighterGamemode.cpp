@@ -24,6 +24,7 @@ void AFighterGamemode::InitGameState()
     {
         if (USSBGameInstance* SSBGI = GetGameInstance<USSBGameInstance>())
         {
+            FighterGameState->SetTotalCharacterCount(SSBGI->GetTotalCharacterCount());
             FighterGameState->SetTotalPlayerCount(SSBGI->GetTotalPlayerCount());
         }
     }
@@ -100,6 +101,12 @@ void AFighterGamemode::PostLogin(APlayerController* NewPlayer)
         FighterPlayerState->SetPlayerIndex(FighterGameState->GetPlayerJoinCount());
         FighterGameState->SetPlayerJoinCount(FighterGameState->GetPlayerJoinCount() + 1);
     }
+    // 입장한 플레이어의 캐릭터 목숨 설정
+    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+    if (FighterPlayerState && SSBGameInstance)
+    {
+        FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
+    }
 }
 
 void AFighterGamemode::AllPlayerLoginToGameStart()
@@ -112,15 +119,21 @@ void AFighterGamemode::AllPlayerLoginToGameStart()
     // 모든 플레이어가 게임에 접속 된 경우
     if (TotalPlayerCount == PlayerJoinCount)
     {
-        // 각 플레이어 스테이트에 플레이어 캐릭터의 목숨 설정
-        for (TObjectPtr<APlayerState> PlayerState : FighterGameState->PlayerArray)
+        int32 TotalCharacterCount = FighterGameState->GetTotalCharacterCount();
+
+        for (int i = 0; i < TotalCharacterCount - PlayerJoinCount; ++i)
         {
-            TObjectPtr<AFighterPlayerState> FighterPlayerState = Cast<AFighterPlayerState>(PlayerState);
+            int32 CurPlayerJoinCount = FighterGameState->GetPlayerJoinCount();
+
+            APlayerController* NewPlayerController = UGameplayStatics::CreatePlayer(GetWorld(), CurPlayerJoinCount, true);
+
+            AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(NewPlayerController->PlayerState);
+            const FString& CurPlayerName = FighterPlayerState->GetPlayerName();
+            
             USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
-            if (FighterPlayerState && SSBGameInstance)
-            {
-                FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
-            }
+            SSBGameInstance->SetSelectedCharacterClassMap(CurPlayerName, SSBGameInstance->GetAICharacterClassArray(i));
+
+            RestartPlayer(NewPlayerController);
         }
     }
     else

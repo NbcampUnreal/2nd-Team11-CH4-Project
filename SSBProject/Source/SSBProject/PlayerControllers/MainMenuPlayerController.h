@@ -24,13 +24,14 @@ public:
 	void SetSelectCharacter(TSubclassOf<APawn> SelectedClass);
 
 	//TEST
-	UFUNCTION(BlueprintCallable, Server, Reliable)
-	void ServerMapTravel(const FString& MapName);
+	void TESTFUNC();
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<APawn> TESTSelectedCharacterClass1;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<APawn> TESTSelectedCharacterClass2;
+
+	FTimerHandle TESTTimerHandle;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")

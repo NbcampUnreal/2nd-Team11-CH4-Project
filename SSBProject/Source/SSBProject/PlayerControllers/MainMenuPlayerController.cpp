@@ -17,17 +17,9 @@ void AMainMenuPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	//TEST
-	if (TESTSelectedCharacterClass1)
-	{
-		SetSelectCharacter_Implementation(TESTSelectedCharacterClass1);
-		TESTSelectedCharacterClass1 = nullptr;
-	}
-	else
-	{
-		SetSelectCharacter_Implementation(TESTSelectedCharacterClass2);
-	}
+	GetWorldTimerManager().SetTimer(TESTTimerHandle, this, &AMainMenuPlayerController::TESTFUNC, 1.f, false);
 
-	if (MainMenuWidgetClass)
+	if (IsLocalController() && MainMenuWidgetClass)
 	{
 		MainMenuWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
 
@@ -41,21 +33,25 @@ void AMainMenuPlayerController::BeginPlay()
 	}
 }
 
-void AMainMenuPlayerController::SetSelectCharacter_Implementation(TSubclassOf<APawn> SelectedClass)
+void AMainMenuPlayerController::TESTFUNC()
 {
-	USSBGameInstance* CurInstnace = GetGameInstance<USSBGameInstance>();
-	if (CurInstnace)
+	if (TESTSelectedCharacterClass1)
 	{
-		FString CurPlayerName = PlayerState->GetPlayerName();
-		CurInstnace->SetSelectedCharacterClassMap(CurPlayerName, SelectedClass);
+		SetSelectCharacter_Implementation(TESTSelectedCharacterClass1);
+		TESTSelectedCharacterClass1 = nullptr;
+	}
+	else
+	{
+		SetSelectCharacter_Implementation(TESTSelectedCharacterClass2);
 	}
 }
 
-void AMainMenuPlayerController::ServerMapTravel_Implementation(const FString& MapName)
+void AMainMenuPlayerController::SetSelectCharacter_Implementation(TSubclassOf<APawn> SelectedClass)
 {
-	if (GetWorld() && GetWorld()->GetAuthGameMode())
+	USSBGameInstance* CurInstnace = GetGameInstance<USSBGameInstance>();
+	if (CurInstnace && PlayerState)
 	{
-		FString Command = FString::Printf(TEXT("%s?listen"), *MapName);
-		GetWorld()->ServerTravel(Command);
+		FString CurPlayerName = PlayerState->GetPlayerName();
+		CurInstnace->SetSelectedCharacterClassMap(CurPlayerName, SelectedClass);
 	}
 }

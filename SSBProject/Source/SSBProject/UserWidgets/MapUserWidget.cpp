@@ -1,7 +1,7 @@
 #include "MapUserWidget.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
-#include "MainMenuPlayerController.h"
+#include "SSBGameInstance.h"
 
 void UMapUserWidget::NativeConstruct()
 {
@@ -21,6 +21,6 @@ void UMapUserWidget::SelectMap()
 {
     //UGameplayStatics::OpenLevel(this, FName("BattlePlace"));
 
-    AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
-    PlayerController->ServerMapTravel(FString("/Game/Maps/BattlePlace"));
+    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+    SSBGameInstance->ServerMapTravel(FString("/Game/Maps/BattlePlace"));
 }

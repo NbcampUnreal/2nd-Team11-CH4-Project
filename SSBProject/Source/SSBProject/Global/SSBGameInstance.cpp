@@ -7,12 +7,16 @@ void USSBGameInstance::Init()
 {
     Super::Init();
 
+    TotalCharacterCount = 0;
     TotalPlayerCount = 0;
     InitialStock = 0;
 
     //TEST
-    TotalPlayerCount = 1;
+    TotalCharacterCount = 3;
+    TotalPlayerCount = 2;
     InitialStock = 3;
+
+    AICharacterClassArray.Add(TESTSelectedCharacterClass);
 }
 
 void USSBGameInstance::ServerMapTravel_Implementation(const FString& MapName)
@@ -36,6 +40,26 @@ void USSBGameInstance::SetSelectedCharacterClassMap(FString KeyClientName, TSubc
     {
         SelectedCharacterClassMap.FindOrAdd(KeyClientName) = NewClass;
     }
+}
+
+TSubclassOf<APawn> USSBGameInstance::GetAICharacterClassArray(int Index)
+{
+    return AICharacterClassArray[Index];
+}
+
+void USSBGameInstance::SetAICharacterClassArray(TArray<TSubclassOf<APawn>> NewAICharacterClassArray)
+{
+    AICharacterClassArray = NewAICharacterClassArray;
+}
+
+int32 USSBGameInstance::GetTotalCharacterCount()
+{
+    return TotalCharacterCount;
+}
+
+void USSBGameInstance::SetTotalCharacterCount(int32 NewTotalCharacterCount)
+{
+    TotalCharacterCount = NewTotalCharacterCount;
 }
 
 int32 USSBGameInstance::GetTotalPlayerCount()
