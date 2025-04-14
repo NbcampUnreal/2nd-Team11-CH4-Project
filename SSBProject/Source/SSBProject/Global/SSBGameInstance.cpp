@@ -10,6 +10,11 @@ void USSBGameInstance::Init()
     TotalCharacterCount = 0;
     TotalPlayerCount = 0;
     InitialStock = 0;
+    bIsAIArray.SetNum(4);
+    for (int i = 0; i < bIsAIArray.Num(); ++i)
+    {
+        bIsAIArray[i] = false;
+    }
 
     //TEST
     TotalCharacterCount = 3;
@@ -70,6 +75,11 @@ int32 USSBGameInstance::GetTotalPlayerCount()
 void USSBGameInstance::SetTotalPlayerCount(int32 NewTotalPlayerCount)
 {
     TotalPlayerCount = NewTotalPlayerCount;
+}
+
+void USSBGameInstance::SetIsAIArray(int32 Index, bool NewbIsAI)
+{
+    bIsAIArray[Index] = NewbIsAI;
 }
 
 int32 USSBGameInstance::GetInitialStock()

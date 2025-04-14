@@ -41,6 +41,9 @@ public:
     UFUNCTION(BlueprintCallable)
     void SetTotalPlayerCount(int32 NewTotalPlayerCount);
 
+    UFUNCTION()
+    void SetIsAIArray(int32 Index, bool NewbIsAI);
+
     UFUNCTION(BlueprintCallable, BlueprintPure)
     int32 GetInitialStock();
     UFUNCTION(BlueprintCallable)
@@ -65,6 +68,10 @@ protected:
     // 총 플레이어 수
     UPROPERTY(BlueprintReadOnly, Category = "Player")
     int32 TotalPlayerCount;
+
+    // AI가 되어야할 캐릭터 인덱스
+    UPROPERTY(BlueprintReadOnly, Category = "AI")
+    TArray<bool> bIsAIArray;
 
     // Stock 모드에서 사용할 Stock 수
     UPROPERTY(BlueprintReadOnly, Category = "Stock")

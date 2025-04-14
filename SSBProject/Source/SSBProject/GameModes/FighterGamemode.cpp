@@ -131,6 +131,8 @@ void AFighterGamemode::AllPlayerLoginToGameStart()
             const FString& CurPlayerName = FighterPlayerState->GetPlayerName();
             
             USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+
+            SSBGameInstance->SetIsAIArray(CurPlayerJoinCount, true);
             SSBGameInstance->SetSelectedCharacterClassMap(CurPlayerName, SSBGameInstance->GetAICharacterClassArray(i));
 
             RestartPlayer(NewPlayerController);
