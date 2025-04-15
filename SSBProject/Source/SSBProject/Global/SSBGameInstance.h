@@ -22,14 +22,17 @@ public:
 	
 public:
     UFUNCTION(BlueprintCallable)
+    const TArray<TSubclassOf<APawn>> GetCharacterClassArray() const;
+
+    UFUNCTION(BlueprintCallable)
     TSubclassOf<APawn> GetSelectedCharacterClassMap(FString KeyClientName) const;
     UFUNCTION(BlueprintCallable)
     void SetSelectedCharacterClassMap(FString KeyClientName, TSubclassOf<APawn> NewClass);
 
     UFUNCTION(BlueprintCallable)
-    TSubclassOf<APawn> GetAICharacterClassArray(int Index);
+    TSubclassOf<APawn> GetSelectedAICharacterClassArray(int Index);
     UFUNCTION(BlueprintCallable)
-    void SetAICharacterClassArray(TArray<TSubclassOf<APawn>> NewAICharacterClassArray);
+    void SetSelectedAICharacterClassArray(TArray<TSubclassOf<APawn>> NewAICharacterClassArray);
 
     UFUNCTION(BlueprintCallable)
     int32 GetTotalCharacterCount();
@@ -49,17 +52,18 @@ public:
     UFUNCTION(BlueprintCallable)
     void SetInitialStock(int32 NewInitialStock);
 
-    //TEST
-    UPROPERTY(EditAnywhere)
-    TSubclassOf<APawn> TESTSelectedCharacterClass;
-
 protected:
+    // 캐릭터 클래스들이 저장된 배열
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character")
+    TArray<TSubclassOf<APawn>> CharacterClassArray;
+
     // 선택된 캐릭터 목록
     UPROPERTY(BlueprintReadOnly, Category = "Character")
     TMap<FString, TSubclassOf<APawn>> SelectedCharacterClassMap;
 
     // 스폰되어야 할 AI 캐릭터 목록
-    TArray<TSubclassOf<APawn>> AICharacterClassArray;
+    UPROPERTY(BlueprintReadOnly, Category = "Character")
+    TArray<TSubclassOf<APawn>> SelectedAICharacterClassArray;
 
     // 총 캐릭터 수
     UPROPERTY(BlueprintReadOnly, Category = "Player")

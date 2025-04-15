@@ -21,17 +21,10 @@ public:
 
 public:
 	UFUNCTION(Server, Reliable)
+	void InitGameValue(int32 NewTotalCharacterCount, int32 NewTotalPlayerCount, int32 NewInitialStock, const TArray<TSubclassOf<APawn>>& NewAICharacterClassArray);
+
+	UFUNCTION(Server, Reliable)
 	void SetSelectCharacter(TSubclassOf<APawn> SelectedClass);
-
-	//TEST
-	void TESTFUNC();
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<APawn> TESTSelectedCharacterClass1;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<APawn> TESTSelectedCharacterClass2;
-
-	FTimerHandle TESTTimerHandle;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")

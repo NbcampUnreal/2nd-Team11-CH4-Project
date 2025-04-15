@@ -66,7 +66,7 @@ void UMainMenuUserWidget::OpenCharacterSelect()
     {
         UUserWidget* CharacterUI = CreateWidget<UUserWidget>(
             World,
-            LoadClass<UUserWidget>(nullptr, TEXT("/Game/Blueprints/UserWidgets/BP_CharacterUserWidget.BP_CharacterUserWidget_C"))
+            LoadClass<UUserWidget>(nullptr, TEXT("/Game/Blueprints/UserWidgets/WBP_CharacterUserWidget.WBP_CharacterUserWidget_C"))
         );
 
         if (CharacterUI)
