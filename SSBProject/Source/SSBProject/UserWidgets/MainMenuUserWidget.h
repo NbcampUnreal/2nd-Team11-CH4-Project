@@ -42,7 +42,7 @@ protected:
     void OnCoopCardClicked();
 
     // 화면 전환용
-    void OpenCharacterSelect();
+    UUserWidget* OpenCharacterSelect();
 
     void CreateModeCard(FText Title, FText Desc, UTexture2D* Icon, EGameModes ModeType);
 

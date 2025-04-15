@@ -4,6 +4,8 @@
 #include "Components/HorizontalBox.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "CharacterSelectUserWidget.h"
+#include "MainMenuPlayerController.h"
 
 UMainMenuUserWidget::UMainMenuUserWidget(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
@@ -60,11 +62,12 @@ void UMainMenuUserWidget::HandleCardClick(EGameModes ModeType)
     }
 }
 
-void UMainMenuUserWidget::OpenCharacterSelect()
+UUserWidget* UMainMenuUserWidget::OpenCharacterSelect()
 {
+    UUserWidget* CharacterUI = nullptr;
     if (UWorld* World = GetWorld())
     {
-        UUserWidget* CharacterUI = CreateWidget<UUserWidget>(
+        CharacterUI = CreateWidget<UUserWidget>(
             World,
             LoadClass<UUserWidget>(nullptr, TEXT("/Game/Blueprints/UserWidgets/WBP_CharacterUserWidget.WBP_CharacterUserWidget_C"))
         );
@@ -72,9 +75,18 @@ void UMainMenuUserWidget::OpenCharacterSelect()
         if (CharacterUI)
         {
             CharacterUI->AddToViewport();
+
+            AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+            if (PlayerController)
+            {
+                PlayerController->SetCharacterSelectUserWidgetInstance(CharacterUI);
+            }
+            
             RemoveFromParent();
         }
     }
+
+    return CharacterUI;
 }
 
 void UMainMenuUserWidget::OnExitButtonClicked()
@@ -83,15 +95,52 @@ void UMainMenuUserWidget::OnExitButtonClicked()
 }
 void UMainMenuUserWidget::OnSingleCardClicked()
 {
-    OpenCharacterSelect();
+    UCharacterSelectUserWidget* CharacterSelect = Cast<UCharacterSelectUserWidget>(OpenCharacterSelect());
+
+    if (CharacterSelect)
+    {
+        TArray<int32> TargetPlayerCount;
+        TargetPlayerCount.Add(1);
+
+        AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+        if (PlayerController)
+        {
+            PlayerController->ServerSetGameCharacterConfiguration(TargetPlayerCount, 1);
+        }
+    }
 }
 
 void UMainMenuUserWidget::OnMultiplayerCardClicked()
 {
-    OpenCharacterSelect();
+    UCharacterSelectUserWidget* CharacterSelect = Cast<UCharacterSelectUserWidget>(OpenCharacterSelect());
+
+    if (CharacterSelect)
+    {
+        TArray<int32> TargetPlayerCount;
+        TargetPlayerCount.Add(2);
+        TargetPlayerCount.Add(4);
+        
+        AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+        if (PlayerController)
+        {
+            PlayerController->ServerSetGameCharacterConfiguration(TargetPlayerCount, 0);
+        }
+    }
 }
 
 void UMainMenuUserWidget::OnCoopCardClicked()
 {
-    OpenCharacterSelect();
+    UCharacterSelectUserWidget* CharacterSelect = Cast<UCharacterSelectUserWidget>(OpenCharacterSelect());
+
+    if (CharacterSelect)
+    {
+        TArray<int32> TargetPlayerCount;
+        TargetPlayerCount.Add(2);
+        
+        AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+        if (PlayerController)
+        {
+            PlayerController->ServerSetGameCharacterConfiguration(TargetPlayerCount, 2);
+        }
+    }
 }

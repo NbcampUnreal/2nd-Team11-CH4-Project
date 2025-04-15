@@ -26,10 +26,31 @@ public:
 	UFUNCTION(Server, Reliable)
 	void SetSelectCharacter(TSubclassOf<APawn> SelectedClass);
 
+	UFUNCTION(Server, Reliable)
+	void ServerAddSelectedPlayers(int32 PlayerID);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetGameCharacterConfiguration(const TArray<int32>& NewTargetPlayerCount, int32 NewAICharacterCount);
+
+
+	UFUNCTION(Server, Reliable)
+	void ServerUpdateUI(const TArray<int32>& TargetPlayerCount, const TArray<int32>& SelectedPlayers);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastUpdateUI(const TArray<int32>& TargetPlayerCount, const TArray<int32>& SelectedPlayers);
+
+	UFUNCTION(Server, Reliable)
+	void ServerMapTravelCall(const FString& MapName);
+
+	UFUNCTION()
+	void SetCharacterSelectUserWidgetInstance(UUserWidget* NewCharacterSelectUserWidgetInstance);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	TObjectPtr<UUserWidget> MainMenuWidgetInstance;
 
+private:
+	UPROPERTY(VisibleAnywhere, Category = "UI")
+	TObjectPtr<UUserWidget> CharacterSelectUserWidgetInstance;
 };

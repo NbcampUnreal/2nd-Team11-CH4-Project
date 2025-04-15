@@ -19,6 +19,11 @@ UButton* UCharacterButtonUserWidget::GetCharacterButton() const
     return CharacterButton;
 }
 
+void UCharacterButtonUserWidget::SetSelectedCharacterClass(TSubclassOf<APawn> NewSelectedCharacterClass)
+{
+    SelectedCharacterClass = NewSelectedCharacterClass;
+}
+
 void UCharacterButtonUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

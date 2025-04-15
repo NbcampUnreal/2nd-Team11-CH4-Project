@@ -19,6 +19,8 @@ public:
 
 	UButton* GetCharacterButton() const;
 
+	void SetSelectedCharacterClass(TSubclassOf<APawn> NewSelectedCharacterClass);
+
 protected:
 	virtual void NativeConstruct() override;
 
