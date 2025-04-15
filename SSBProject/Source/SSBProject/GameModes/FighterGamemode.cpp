@@ -133,7 +133,7 @@ void AFighterGamemode::AllPlayerLoginToGameStart()
             USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
 
             SSBGameInstance->SetIsAIArray(CurPlayerJoinCount, true);
-            SSBGameInstance->SetSelectedCharacterClassMap(CurPlayerName, SSBGameInstance->GetAICharacterClassArray(i));
+            SSBGameInstance->SetSelectedCharacterClassMap(CurPlayerName, SSBGameInstance->GetSelectedAICharacterClassArray(i));
 
             RestartPlayer(NewPlayerController);
         }

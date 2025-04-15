@@ -16,9 +16,6 @@ void AMainMenuPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//TEST
-	GetWorldTimerManager().SetTimer(TESTTimerHandle, this, &AMainMenuPlayerController::TESTFUNC, 1.f, false);
-
 	if (IsLocalController() && MainMenuWidgetClass)
 	{
 		MainMenuWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
@@ -33,16 +30,16 @@ void AMainMenuPlayerController::BeginPlay()
 	}
 }
 
-void AMainMenuPlayerController::TESTFUNC()
+// 순서대로 총 캐릭터 수, 플레이어 수, 목숨 개수, 스폰될 AI 클래스 종류
+void AMainMenuPlayerController::InitGameValue_Implementation(int32 NewTotalCharacterCount, int32 NewTotalPlayerCount, int32 NewInitialStock, const TArray<TSubclassOf<APawn>>& NewAICharacterClassArray)
 {
-	if (TESTSelectedCharacterClass1)
+	USSBGameInstance* CurInstnace = GetGameInstance<USSBGameInstance>();
+	if (CurInstnace)
 	{
-		SetSelectCharacter_Implementation(TESTSelectedCharacterClass1);
-		TESTSelectedCharacterClass1 = nullptr;
-	}
-	else
-	{
-		SetSelectCharacter_Implementation(TESTSelectedCharacterClass2);
+		CurInstnace->SetTotalCharacterCount(NewTotalCharacterCount);
+		CurInstnace->SetTotalPlayerCount(NewTotalPlayerCount);
+		CurInstnace->SetInitialStock(NewInitialStock);
+		CurInstnace->SetSelectedAICharacterClassArray(NewAICharacterClassArray);
 	}
 }
 

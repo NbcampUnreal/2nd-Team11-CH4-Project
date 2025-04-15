@@ -15,13 +15,6 @@ void USSBGameInstance::Init()
     {
         bIsAIArray[i] = false;
     }
-
-    //TEST
-    TotalCharacterCount = 3;
-    TotalPlayerCount = 2;
-    InitialStock = 3;
-
-    AICharacterClassArray.Add(TESTSelectedCharacterClass);
 }
 
 void USSBGameInstance::ServerMapTravel_Implementation(const FString& MapName)
@@ -31,6 +24,11 @@ void USSBGameInstance::ServerMapTravel_Implementation(const FString& MapName)
         FString Command = FString::Printf(TEXT("%s?listen"), *MapName);
         GetWorld()->ServerTravel(Command);
     }
+}
+
+const TArray<TSubclassOf<APawn>> USSBGameInstance::GetCharacterClassArray() const
+{
+    return CharacterClassArray;
 }
 
 TSubclassOf<APawn> USSBGameInstance::GetSelectedCharacterClassMap(FString KeyClientName) const
@@ -47,14 +45,14 @@ void USSBGameInstance::SetSelectedCharacterClassMap(FString KeyClientName, TSubc
     }
 }
 
-TSubclassOf<APawn> USSBGameInstance::GetAICharacterClassArray(int Index)
+TSubclassOf<APawn> USSBGameInstance::GetSelectedAICharacterClassArray(int Index)
 {
-    return AICharacterClassArray[Index];
+    return SelectedAICharacterClassArray[Index];
 }
 
-void USSBGameInstance::SetAICharacterClassArray(TArray<TSubclassOf<APawn>> NewAICharacterClassArray)
+void USSBGameInstance::SetSelectedAICharacterClassArray(TArray<TSubclassOf<APawn>> NewAICharacterClassArray)
 {
-    AICharacterClassArray = NewAICharacterClassArray;
+    SelectedAICharacterClassArray = NewAICharacterClassArray;
 }
 
 int32 USSBGameInstance::GetTotalCharacterCount()
