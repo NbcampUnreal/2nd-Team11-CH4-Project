@@ -12,6 +12,9 @@ class SSBPROJECT_API ATitleWidgetController : public APlayerController
 public:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(Server, Reliable)
+	void ServerRequestMainMenuTravel(APlayerController* TargetPlayer);
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = APlayerController, Meta = (AllowPrivateAccess))
 	TSubclassOf<UUserWidget> UIWidgetClass;

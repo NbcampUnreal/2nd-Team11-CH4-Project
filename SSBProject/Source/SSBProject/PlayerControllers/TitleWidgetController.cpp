@@ -30,6 +30,16 @@ void ATitleWidgetController::BeginPlay()
 	}
 }
 
+void ATitleWidgetController::ServerRequestMainMenuTravel_Implementation(APlayerController* TargetPlayer)
+{
+	GetWorld()->ServerTravel(TEXT("/Game/Maps/MainMenuMap"), TRAVEL_Absolute);
+
+	//if (TargetPlayer)
+	//{
+	//	TargetPlayer->ClientTravel(TEXT("/Game/Maps/MainMenuMap"), TRAVEL_Absolute);
+	//}
+}
+
 void ATitleWidgetController::SetTitleCameraView()
 {
 	TArray<AActor*> FoundCameras;
