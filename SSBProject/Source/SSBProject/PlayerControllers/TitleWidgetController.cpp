@@ -7,6 +7,11 @@ void ATitleWidgetController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (IsLocalController())
+	{
+		SetTitleCameraView();
+	}
+
 	if (IsLocalController() && true == IsValid(UIWidgetClass))
 	{
 		UIWidgetInstance = CreateWidget<UUserWidget>(this, UIWidgetClass);
@@ -32,9 +37,9 @@ void ATitleWidgetController::SetTitleCameraView()
 
 	for (AActor* Actor : FoundCameras)
 	{
-		if (Actor->GetName().Contains(TEXT("TitleCamera"))) // 카메라 이름 기준
+		if (Actor->ActorHasTag("Camera")) // 카메라 이름 기준
 		{
-			SetViewTargetWithBlend(Actor, 1.0f);
+			SetViewTargetWithBlend(Actor, 0.0f);
 			break;
 		}
 	}
