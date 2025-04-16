@@ -6,12 +6,17 @@
 void ATitleWidgetController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (IsLocalController())
+	{
+		SetTitleCameraView();
+	}
 
-	if (true == ::IsValid(UIWidgetClass))
+	if (IsLocalController() && true == IsValid(UIWidgetClass))
 	{
 		UIWidgetInstance = CreateWidget<UUserWidget>(this, UIWidgetClass);
 		// CreateWidget()이 호출될 때 UIWidgetInstance->NativeOnInitialize() 함수가 호출됨.
-		if (true == ::IsValid(UIWidgetInstance))
+		if (UIWidgetInstance)
 		{
 			UIWidgetInstance->AddToViewport();
 			// AddToViewport()가 호출 될 때 UIWidgetInstance->NativeConstruct() 함수가 호출됨.
@@ -32,9 +37,9 @@ void ATitleWidgetController::SetTitleCameraView()
 
 	for (AActor* Actor : FoundCameras)
 	{
-		if (Actor->GetName().Contains(TEXT("TitleCamera"))) // 카메라 이름 기준
+		if (Actor->ActorHasTag("Camera")) // 카메라 이름 기준
 		{
-			SetViewTargetWithBlend(Actor, 1.0f);
+			SetViewTargetWithBlend(Actor, 0.0f);
 			break;
 		}
 	}
