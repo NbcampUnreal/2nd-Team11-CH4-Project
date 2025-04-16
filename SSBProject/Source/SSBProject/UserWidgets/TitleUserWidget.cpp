@@ -1,5 +1,6 @@
 #include "TitleUserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "TitleWidgetController.h"
 
 UTitleUserWidget::UTitleUserWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -24,6 +25,13 @@ void UTitleUserWidget::NativeConstruct()
 FReply UTitleUserWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	// 아무 키나 누르면 다음 레벨로 이동
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMenuMap"));
+	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMenuMap"));
+
+	ATitleWidgetController* PlayerController = GetOwningPlayer<ATitleWidgetController>();
+	if (PlayerController)
+	{
+		PlayerController->ServerRequestMainMenuTravel(PlayerController);
+	}
+
 	return FReply::Handled();
 }
