@@ -7,23 +7,38 @@ void UMapUserWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    if (MapButton1)
+    if (DollHouseMapButton)
     {
-        MapButton1->OnClicked.AddDynamic(this, &UMapUserWidget::SelectMap);
+        DollHouseMapButton->OnClicked.AddDynamic(this, &UMapUserWidget::SelectDollHouseMap);
     }
-    if (MapButton2)
+    if (WildernessMapButton)
     {
-        MapButton2->OnClicked.AddDynamic(this, &UMapUserWidget::SelectMap);
+        WildernessMapButton->OnClicked.AddDynamic(this, &UMapUserWidget::SelectWildernessMap);
     }
 }
 
-void UMapUserWidget::SelectMap()
+void UMapUserWidget::SelectDollHouseMap()
 {
-    //UGameplayStatics::OpenLevel(this, FName("BattlePlace"));
-
     AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
     if (PlayerController)
     {
-        PlayerController->ServerMapTravelCall("/Game/Maps/BattlePlace1");
+        PlayerController->ServerMapTravelCall("/Game/Maps/L_DollHouse");
     }
+}
+
+void UMapUserWidget::SelectWildernessMap()
+{
+    AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+    if (PlayerController)
+    {
+        PlayerController->ServerMapTravelCall("/Game/Maps/L_Wilderness");
+    }
+}
+
+void UMapUserWidget::Select111Map()
+{
+}
+
+void UMapUserWidget::Select22Map()
+{
 }

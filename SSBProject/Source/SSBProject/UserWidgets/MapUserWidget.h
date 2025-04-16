@@ -4,6 +4,8 @@
 #include "Blueprint/UserWidget.h"
 #include "MapUserWidget.generated.h"
 
+class UButton;
+
 UCLASS()
 class SSBPROJECT_API UMapUserWidget : public UUserWidget
 {
@@ -12,12 +14,22 @@ class SSBPROJECT_API UMapUserWidget : public UUserWidget
 protected:
     virtual void NativeConstruct() override;
 
-    UPROPERTY(meta = (BindWidget))
-    class UButton* MapButton1;
-
-    UPROPERTY(meta = (BindWidget))
-    class UButton* MapButton2;
+    UFUNCTION()
+    void SelectDollHouseMap();
 
     UFUNCTION()
-    void SelectMap();
+    void SelectWildernessMap();
+
+    UFUNCTION()
+    void Select111Map();
+
+    UFUNCTION()
+    void Select22Map();
+
+protected:
+    UPROPERTY(meta = (BindWidget))
+    UButton* DollHouseMapButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* WildernessMapButton;
 };
