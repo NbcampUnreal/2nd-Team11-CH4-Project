@@ -24,6 +24,6 @@ void UMapUserWidget::SelectMap()
     AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
     if (PlayerController)
     {
-        PlayerController->ServerMapTravelCall("/Game/Maps/BattlePlace");
+        PlayerController->ServerMapTravelCall("/Game/Maps/BattlePlace1");
     }
 }
