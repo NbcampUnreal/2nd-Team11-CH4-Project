@@ -35,6 +35,30 @@ void AFighterGamemode::StartPlay()
     Super::StartPlay();
 }
 
+FString AFighterGamemode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
+{
+    FString ErrorMessage = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
+
+    AFighterGameState* FighterGameState = GetGameState<AFighterGameState>();
+    AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(NewPlayerController->PlayerState);
+
+    // 레벨 이동이 된 플레이어의 수를 카운트
+    // 입장 순서대로 현재 플레이어 스테이트에 번호를 부여
+    if (FighterGameState && FighterPlayerState)
+    {
+        FighterPlayerState->SetPlayerIndex(FighterGameState->GetPlayerJoinCount());
+        FighterGameState->SetPlayerJoinCount(FighterGameState->GetPlayerJoinCount() + 1);
+    }
+    // 입장한 플레이어의 캐릭터 목숨 설정
+    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
+    if (FighterPlayerState && SSBGameInstance)
+    {
+        FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
+    }
+
+    return ErrorMessage;
+}
+
 UClass* AFighterGamemode::GetDefaultPawnClassForController_Implementation(AController* InController)
 {
     AFighterPlayerController* CurPlayerController = Cast<AFighterPlayerController>(InController);
@@ -86,27 +110,6 @@ void AFighterGamemode::PostLogin(APlayerController* NewPlayer)
 {
     Super::PostLogin(NewPlayer);
 
-    if (!NewPlayer)
-    {
-        return;
-    }
-
-    AFighterGameState* FighterGameState = GetGameState<AFighterGameState>();
-    AFighterPlayerState* FighterPlayerState = Cast<AFighterPlayerState>(NewPlayer->PlayerState);
-
-    // 레벨 이동이 된 플레이어의 수를 카운트
-    // 입장 순서대로 현재 플레이어 스테이트에 번호를 부여
-    if (FighterGameState && FighterPlayerState)
-    {
-        FighterPlayerState->SetPlayerIndex(FighterGameState->GetPlayerJoinCount());
-        FighterGameState->SetPlayerJoinCount(FighterGameState->GetPlayerJoinCount() + 1);
-    }
-    // 입장한 플레이어의 캐릭터 목숨 설정
-    USSBGameInstance* SSBGameInstance = GetGameInstance<USSBGameInstance>();
-    if (FighterPlayerState && SSBGameInstance)
-    {
-        FighterPlayerState->SetStock(SSBGameInstance->GetInitialStock());
-    }
 }
 
 void AFighterGamemode::AllPlayerLoginToGameStart()

@@ -43,23 +43,36 @@ void AMainMenuPlayerController::ServerAddSelectedPlayers_Implementation(int32 Pl
 		{
 			MainMenuGameState->AddSelectedPlayers(PlayerID);
 			
-			MulticastUpdateUI(MainMenuGameMode->GetTargetPlayerCount(), MainMenuGameState->GetSelectedPlayers());
+			ServerUpdateUI(MainMenuGameMode->GetTargetPlayerCount(), MainMenuGameState->GetSelectedPlayers());
 		}
 	}
 }
 
 void AMainMenuPlayerController::ServerUpdateUI_Implementation(const TArray<int32>& TargetPlayerCount, const TArray<int32>& SelectedPlayers)
 {
-	UCharacterSelectUserWidget* CharacterSelectUserWidget = Cast<UCharacterSelectUserWidget>(CharacterSelectUserWidgetInstance);
-
-	if (CharacterSelectUserWidget)
+	for (TObjectPtr<APlayerState> P : GetWorld()->GetGameState()->PlayerArray)
 	{
-		CharacterSelectUserWidget->UpdateUI(TargetPlayerCount, SelectedPlayers);
+		AMainMenuPlayerController* PlayerController = Cast<AMainMenuPlayerController>(P->GetPlayerController());
+		
+		if (PlayerController->IsLocalController())
+		{
+			UCharacterSelectUserWidget* CharacterSelectUserWidget = Cast<UCharacterSelectUserWidget>(PlayerController->GetCharacterSelectUserWidgetInstance());
+
+			if (CharacterSelectUserWidget)
+			{
+				CharacterSelectUserWidget->UpdateUI(TargetPlayerCount, SelectedPlayers);
+			}
+		}
 	}
 }
 
 void AMainMenuPlayerController::MulticastUpdateUI_Implementation(const TArray<int32>& TargetPlayerCount, const TArray<int32>& SelectedPlayers)
 {
+	if (!IsLocalController() || !CharacterSelectUserWidgetInstance)
+	{
+		return;
+	}
+
 	UCharacterSelectUserWidget* CharacterSelectUserWidget = Cast<UCharacterSelectUserWidget>(CharacterSelectUserWidgetInstance);
 
 	if (CharacterSelectUserWidget)
@@ -87,6 +100,11 @@ void AMainMenuPlayerController::ServerMapTravelCall_Implementation(const FString
 void AMainMenuPlayerController::SetCharacterSelectUserWidgetInstance(UUserWidget* NewCharacterSelectUserWidgetInstance)
 {
 	CharacterSelectUserWidgetInstance = NewCharacterSelectUserWidgetInstance;
+}
+
+UUserWidget* AMainMenuPlayerController::GetCharacterSelectUserWidgetInstance()
+{
+	return CharacterSelectUserWidgetInstance;
 }
 
 // 순서대로 총 캐릭터 수, 플레이어 수, 목숨 개수, 스폰될 AI 클래스 종류
