@@ -15,6 +15,14 @@ void UMapUserWidget::NativeConstruct()
     {
         WildernessMapButton->OnClicked.AddDynamic(this, &UMapUserWidget::SelectWildernessMap);
     }
+    if (BattlePlaceMapButton)
+    {
+        BattlePlaceMapButton->OnClicked.AddDynamic(this, &UMapUserWidget::SelectBattlePlaceMap);
+    }
+    if (OceanMapButton)
+    {
+        OceanMapButton->OnClicked.AddDynamic(this, &UMapUserWidget::SelectOceanMap);
+    }
 }
 
 void UMapUserWidget::SelectDollHouseMap()
@@ -35,10 +43,20 @@ void UMapUserWidget::SelectWildernessMap()
     }
 }
 
-void UMapUserWidget::Select111Map()
+void UMapUserWidget::SelectBattlePlaceMap()
 {
+    AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+    if (PlayerController)
+    {
+        PlayerController->ServerMapTravelCall("/Game/Maps/L_BattlePlace");
+    }
 }
 
-void UMapUserWidget::Select22Map()
+void UMapUserWidget::SelectOceanMap()
 {
+    AMainMenuPlayerController* PlayerController = GetOwningPlayer<AMainMenuPlayerController>();
+    if (PlayerController)
+    {
+        PlayerController->ServerMapTravelCall("/Game/Maps/L_Ocean");
+    }
 }
