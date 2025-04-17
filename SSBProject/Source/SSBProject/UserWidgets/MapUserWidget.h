@@ -21,10 +21,10 @@ protected:
     void SelectWildernessMap();
 
     UFUNCTION()
-    void Select111Map();
+    void SelectBattlePlaceMap();
 
     UFUNCTION()
-    void Select22Map();
+    void SelectOceanMap();
 
 protected:
     UPROPERTY(meta = (BindWidget))
@@ -32,4 +32,10 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     UButton* WildernessMapButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* BattlePlaceMapButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* OceanMapButton;
 };
