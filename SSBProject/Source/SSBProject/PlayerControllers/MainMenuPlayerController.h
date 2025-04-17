@@ -44,6 +44,9 @@ public:
 	UFUNCTION()
 	void SetCharacterSelectUserWidgetInstance(UUserWidget* NewCharacterSelectUserWidgetInstance);
 
+	UFUNCTION()
+	UUserWidget* GetCharacterSelectUserWidgetInstance();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
