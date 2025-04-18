@@ -2,6 +2,7 @@
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "MainMenuPlayerController.h"
+#include "Components/CircularThrobber.h"
 
 void UMapUserWidget::NativeConstruct()
 {
@@ -31,6 +32,7 @@ void UMapUserWidget::SelectDollHouseMap()
     if (PlayerController)
     {
         PlayerController->ServerMapTravelCall("/Game/Maps/L_DollHouse");
+        Loading->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
 
@@ -40,6 +42,7 @@ void UMapUserWidget::SelectWildernessMap()
     if (PlayerController)
     {
         PlayerController->ServerMapTravelCall("/Game/Maps/L_Wilderness");
+        Loading->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
 
@@ -49,6 +52,7 @@ void UMapUserWidget::SelectBattlePlaceMap()
     if (PlayerController)
     {
         PlayerController->ServerMapTravelCall("/Game/Maps/L_BattlePlace");
+        Loading->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
 
@@ -58,5 +62,6 @@ void UMapUserWidget::SelectOceanMap()
     if (PlayerController)
     {
         PlayerController->ServerMapTravelCall("/Game/Maps/L_Ocean");
+        Loading->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     }
 }
