@@ -5,6 +5,7 @@
 #include "MapUserWidget.generated.h"
 
 class UButton;
+class UCircularThrobber;
 
 UCLASS()
 class SSBPROJECT_API UMapUserWidget : public UUserWidget
@@ -38,4 +39,7 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     UButton* OceanMapButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UCircularThrobber* Loading;
 };

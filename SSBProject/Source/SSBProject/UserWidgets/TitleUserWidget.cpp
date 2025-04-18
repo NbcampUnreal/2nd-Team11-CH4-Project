@@ -1,6 +1,7 @@
 #include "TitleUserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "TitleWidgetController.h"
+#include "Components/CircularThrobber.h"
 
 UTitleUserWidget::UTitleUserWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -31,6 +32,7 @@ FReply UTitleUserWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKey
 	if (PlayerController)
 	{
 		PlayerController->ServerRequestMainMenuTravel(PlayerController);
+		Loading->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 
 	return FReply::Handled();
